@@ -3,11 +3,11 @@ POST http://localhost:8080/signup/customer
 Content-Type: application/json
 
 {
-  "email": "jkatwxc2@naver.com",
-  "nick": "늘빛푸른",
-  "name": "권준혁",
-  "password": "rnjswnsgur12!!",
-  "phone": "01084255023"
+  "email": "jkatwxc2311@gmail.com",
+  "nick": "모새달",
+  "name": "감스트",
+  "password": "dkdkdk5023!!",
+  "phone": "01012345678"
 }
 
 ### 회원가입(판매자)
@@ -15,9 +15,69 @@ POST http://localhost:8080/signup/seller
 Content-Type: application/json
 
 {
+  "email": "jkatwxc2311@gmail.com",
+  "nick": "모새달",
+  "name": "감스트",
+  "password": "dkdkdk5023!!",
+  "phone": "01012345678"
+}
+
+### 로그인 (공통)
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
   "email": "jkatwxc2@naver.com",
-  "nick": "늘빛푸른",
-  "name": "권준혁",
-  "password": "rnjswnsgur12!!",
+  "password": "rnjswnsgur12!!"
+}
+
+### 정보 가져오기
+GET http://localhost:8080/info
+Content-Type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbkVtYWlsIjoiamthdHd4YzFAbmF2ZXIuY29tIiwiaWF0IjoxNjk5NjAxODMxLCJleHAiOjE2OTk2NDUwMzF9.y1_tn2icJ_vmqfaRFP4UB0_BFytRPQHRMAD6mpvi26w
+
+
+
+### 로그아웃하기
+POST http://localhost:8080/userlogout
+Content-Type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbkVtYWlsIjoiamthdHd4YzJAbmF2ZXIuY29tIiwiaWF0IjoxNjk5MzQwNTU3LCJleHAiOjE2OTkzODM3NTd9.IXMke7JjEb3LbiHFeZLUBiybYF03ixm4TaGZSWU50rg
+
+### 유저아이디 찾기
+POST http://localhost:8080/find/userId
+Content-Type: application/json
+
+{
+  "name": "손흥민",
   "phone": "01084255023"
+}
+
+### 유저 비밀번호 찾기 이메일 인증 링크 보내기
+POST http://localhost:8080/find/userPassword
+Content-Type: application/json
+
+{
+  "email": "jkatwxc2@naver.com",
+  "name": "손흥민"
+}
+
+### 유저 비밀번호 찾기 비밀번호 변경
+PUT http://localhost:8080/find/changePassword
+Content-Type: application/json
+VERIFY-KEY: VERIFY_PASSWORD:jkatwxc2@naver.com
+
+{
+  "password": "789789",
+  "rePassword": "789789"
+}
+
+### 유저 정보 변경
+PUT http://localhost:8080/updateInfo
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbkVtYWlsIjoiamthdHd4YzJAbmF2ZXIuY29tIiwiaWF0IjoxNjk5NzcyNTA3LCJleHAiOjE2OTk4MTU3MDd9.EWHoJNze1iyX8mKTP8EJrciNhw9_pY_6TDFj6gadzqc
+
+{
+  "nickname": "당구장공12",
+  "phone": "0108425023",
+  "password": "1234"
 }

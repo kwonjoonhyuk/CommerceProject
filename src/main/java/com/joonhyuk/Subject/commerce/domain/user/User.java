@@ -1,7 +1,7 @@
 package com.joonhyuk.Subject.commerce.domain.user;
 
 import com.joonhyuk.Subject.commerce.domain.BaseEntity;
-import java.time.LocalDateTime;
+import com.joonhyuk.Subject.commerce.domain.user.form.SignupForm;
 import java.util.Locale;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,8 +35,6 @@ public class User extends BaseEntity {
   private String password;
   private String phone;
 
-  private LocalDateTime verifyExpiredAt;
-  private String verificationCode;
   private String verify;
   private Integer balance;
   private String role;
