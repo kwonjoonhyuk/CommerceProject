@@ -4,7 +4,7 @@ package com.joonhyuk.Subject.commerce.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-import com.joonhyuk.Subject.commerce.domain.user.SignupForm;
+import com.joonhyuk.Subject.commerce.domain.user.form.SignupForm;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

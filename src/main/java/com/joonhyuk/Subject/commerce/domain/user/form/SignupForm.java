@@ -1,4 +1,4 @@
-package com.joonhyuk.Subject.commerce.domain.user;
+package com.joonhyuk.Subject.commerce.domain.user.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

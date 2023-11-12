@@ -1,8 +1,7 @@
 package com.joonhyuk.Subject.commerce.controller;
 
-import com.joonhyuk.Subject.commerce.domain.user.SignupForm;
+import com.joonhyuk.Subject.commerce.domain.user.form.SignupForm;
 import com.joonhyuk.Subject.commerce.service.UserSignUpService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,6 @@ public class UserSignupController {
   // 고객 회원가입 진행 이메일 인증
   @GetMapping("/customer/verify")
   public ResponseEntity<String> verifyEmailCustomer(String email, String code) {
-    userSignUpService.verifyEmail(email, code);
     return ResponseEntity.ok( userSignUpService.verifyEmail(email, code));
   }
 
