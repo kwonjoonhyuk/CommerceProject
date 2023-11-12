@@ -1,0 +1,23 @@
+### 회원가입(고객)
+POST http://localhost:8080/signup/customer
+Content-Type: application/json
+
+{
+  "email": "jkatwxc2@naver.com",
+  "nick": "늘빛푸른",
+  "name": "권준혁",
+  "password": "rnjswnsgur12!!",
+  "phone": "01084255023"
+}
+
+### 회원가입(판매자)
+POST http://localhost:8080/signup/seller
+Content-Type: application/json
+
+{
+  "email": "jkatwxc2@naver.com",
+  "nick": "늘빛푸른",
+  "name": "권준혁",
+  "password": "rnjswnsgur12!!",
+  "phone": "01084255023"
+}
