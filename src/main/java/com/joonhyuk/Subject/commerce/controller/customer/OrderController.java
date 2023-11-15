@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
 
   private final UserCustomRepository userCustomRepository;
@@ -29,7 +29,7 @@ public class OrderController {
   private final ProductRepository productRepository;
 
   // 상품 결제하기(장바구니) 동시성 이슈 해결해보기
-  @PostMapping("/post")
+  @PostMapping
   @OrderLock
   public ResponseEntity<OrderDto> OrderProduct(Authentication auth,
       @RequestBody @Valid AddOrderDetailsForm form) {
@@ -44,7 +44,7 @@ public class OrderController {
   }
 
   // 상품 결제 취소하기(장바구니) 취소부분은 동시성 이슈 안해도될것 같음
-  @PutMapping("/put")
+  @PutMapping
   public ResponseEntity<OrderDto> Cancel(Authentication auth,
       @RequestBody @Valid CancelForm form) {
     Long customerId = userCustomRepository.findIdByEmail(auth.getName());
@@ -53,5 +53,4 @@ public class OrderController {
             productRepository)));
   }
 
-  // 상품 결제 목록 확인(주문내역) 최신순으로 불러오는게 좋은데 이거 내일 해결
 }
