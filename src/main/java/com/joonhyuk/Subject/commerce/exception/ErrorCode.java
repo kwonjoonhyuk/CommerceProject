@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
   ALREADY_REGISTERED_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입되어 있는 회원입니다."),
   ALREADY_EXIST_PHONE(HttpStatus.BAD_REQUEST, "이미 존재하는 휴대폰 번호입니다."),
-  NOT_INPUT_ADDRESS(HttpStatus.BAD_REQUEST,"주소가 입력되지 않았습니다."),
+  NOT_INPUT_ADDRESS(HttpStatus.BAD_REQUEST, "주소가 입력되지 않았습니다."),
   ALREADY_VERIFY(HttpStatus.BAD_REQUEST, "이미 인증이 완료된 이메일 주소입니다."),
   EXPIRED_CODE(HttpStatus.BAD_REQUEST, "인증시간이 만료되었습니다."),
   RESTART_VERIFY_CHANGE_PW(HttpStatus.BAD_REQUEST, "다시 인증부터 진행해주세요"),
@@ -22,7 +22,7 @@ public enum ErrorCode {
   PASSWORD_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 
   //유저 정보 변경 exception
-  PLEASE_NEW_NICKNAME(HttpStatus.BAD_REQUEST,"기존 닉네임과 일치합니다. 새로운 닉네임을 입력해주세요"),
+  PLEASE_NEW_NICKNAME(HttpStatus.BAD_REQUEST, "기존 닉네임과 일치합니다. 새로운 닉네임을 입력해주세요"),
   PLEASE_NEW_PW(HttpStatus.BAD_REQUEST, "기존 비밀번호와 일치합니다. 새로운 비밀번호를 입력해주세요"),
   PLEASE_NEW_PHONE(HttpStatus.BAD_REQUEST, "기존 휴대폰번호와 일치합니다. 새로운 휴대폰번호를 입력해주세요"),
 
@@ -38,6 +38,10 @@ public enum ErrorCode {
   // 판매자, 구매자 페이지 권한 설정 예외처리
   DO_NOT_ACCESS_RIGHTS(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다."),
 
+  //장바구니 exception
+  ALREADY_EXIST_CART(HttpStatus.BAD_REQUEST, "장바구니에 이미 존재하는 물품입니다. 확인해주세요"),
+  TOO_MANY_COUNT(HttpStatus.BAD_REQUEST, "선택하신 옵션의 개수보다 남아있는 상품의 개수가 적습니다."),
+  NOT_FOUND_CART(HttpStatus.BAD_REQUEST, "해당 장바구니 물품을 찾을수 없습니다."),
 
   // jwt 토큰 exception
   TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "로그인 토큰이 만료되었습니다."),
