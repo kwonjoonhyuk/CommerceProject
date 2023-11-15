@@ -40,6 +40,10 @@ dependencies {
     //AOP
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+    // 동시성 LOCk을 위한 분산락 Redisson 활용
+    implementation 'org.redisson:redisson:3.20.1'
+    implementation ('it.ozimov:embedded-redis:0.7.3') { exclude group: "org.slf4j", module: "slf4j-simple" }
+
     //유효성 검사
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 

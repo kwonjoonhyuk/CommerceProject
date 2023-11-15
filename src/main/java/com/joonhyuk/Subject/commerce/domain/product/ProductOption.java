@@ -1,5 +1,6 @@
 package com.joonhyuk.Subject.commerce.domain.product;
 
+import com.joonhyuk.Subject.commerce.aop.OrderLock;
 import com.joonhyuk.Subject.commerce.domain.BaseEntity;
 import com.joonhyuk.Subject.commerce.domain.product.form.AddProductOptionForm;
 import javax.persistence.Entity;
@@ -46,5 +47,12 @@ public class ProductOption extends BaseEntity {
         .build();
   }
 
+  public void minusCount(Integer minusCount) {
+    count = count - minusCount;
+  }
+
+  public void plusCount(Integer plusCount) {
+    count = count + plusCount;
+  }
 
 }

@@ -42,7 +42,7 @@ public class User extends BaseEntity {
   public static User from(SignupForm form, String type) {
     if (type.equals("customer")) {
       type = "고객";
-    }else {
+    } else {
       type = "판매자";
     }
     return User.builder()
@@ -55,5 +55,13 @@ public class User extends BaseEntity {
         .role(type)
         .verify("false")
         .build();
+  }
+
+  public void minusBalance(Integer price) {
+    balance = balance - price;
+  }
+
+  public void plusBalance(Integer price) {
+    balance = balance + price;
   }
 }

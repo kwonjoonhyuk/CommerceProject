@@ -1,6 +1,7 @@
 package com.joonhyuk.Subject.commerce.domain.repository.user;
 
 import com.joonhyuk.Subject.commerce.domain.user.QUser;
+import com.joonhyuk.Subject.commerce.domain.user.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,14 @@ public class UserRepositoryImpl implements UserCustomRepository {
     return jpaQueryFactory.select(user.id)
         .from(user)
         .where(user.email.eq(email))
+        .fetchOne();
+  }
+
+  @Override
+  public User findById(Long id) {
+    return jpaQueryFactory.select(user)
+        .from(user)
+        .where(user.id.eq(id))
         .fetchOne();
   }
 

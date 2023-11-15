@@ -30,16 +30,23 @@ public enum ErrorCode {
   // 상품에 대한 exception
   NOT_FOUND_OPTION(HttpStatus.BAD_REQUEST, "해당 상품에 대한 옵션을 찾을 수 없습니다."),
   DO_NOT_MATCH_USER(HttpStatus.BAD_REQUEST, "해당 상품을 등록한 사용자와 다릅니다. 다시 시도해주세요"),
+  INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "잔액이 부족합니다"),
+  ALREADY_CANCEL(HttpStatus.BAD_REQUEST, "이미 취소된 거래건입니다."),
   DO_NOT_MATCH_USER_OPTION(HttpStatus.BAD_REQUEST, "해당 상품옵션을 등록한 사용자와 다릅니다. 다시 시도해주세요"),
   NOT_FOUND_PRODUCT(HttpStatus.BAD_REQUEST, "해당 상품을 찾을 수 없습니다."),
+  ZERO_COUNT_OPTION(HttpStatus.BAD_REQUEST, "해당 사이즈의 상품은 품절되었습니다."),
   ALREADY_EXIST_SIZE(HttpStatus.BAD_REQUEST, "이미 존재하는 상품옵션 사이즈입니다."),
   PLEASE_NEW_COUNT(HttpStatus.BAD_REQUEST, "이미 해당하는 상품옵션 개수와 일치합니다."),
+
+  OPTION_LOCK(HttpStatus.BAD_REQUEST, "Locking"),
+  SERVER_ERROR(HttpStatus.BAD_REQUEST, "예기치 못한 서버 오류가 발생했습니다. 다시 시도해주세요"),
 
   // 판매자, 구매자 페이지 권한 설정 예외처리
   DO_NOT_ACCESS_RIGHTS(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다."),
 
   //장바구니 exception
   ALREADY_EXIST_CART(HttpStatus.BAD_REQUEST, "장바구니에 이미 존재하는 물품입니다. 확인해주세요"),
+  NOT_FOUND_ORDER_DETAILS(HttpStatus.BAD_REQUEST, "해당 거래내역이 존재하지 않습니다."),
   TOO_MANY_COUNT(HttpStatus.BAD_REQUEST, "선택하신 옵션의 개수보다 남아있는 상품의 개수가 적습니다."),
   NOT_FOUND_CART(HttpStatus.BAD_REQUEST, "해당 장바구니 물품을 찾을수 없습니다."),
 

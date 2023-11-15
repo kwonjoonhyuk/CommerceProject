@@ -1,7 +1,10 @@
 package com.joonhyuk.Subject.commerce.controller;
 
+import static com.joonhyuk.Subject.commerce.domain.repository.user.AuthenticationTokenRepository.expiredTimeMs;
+import static com.joonhyuk.Subject.commerce.domain.repository.user.AuthenticationTokenRepository.secretKey;
+
+import com.joonhyuk.Subject.commerce.domain.repository.user.AuthenticationTokenRepository;
 import com.joonhyuk.Subject.commerce.domain.repository.user.UserCustomRepository;
-import com.joonhyuk.Subject.commerce.domain.repository.user.UserRepository;
 import com.joonhyuk.Subject.commerce.domain.user.UserDto;
 import com.joonhyuk.Subject.commerce.domain.user.form.ChangePwForm;
 import com.joonhyuk.Subject.commerce.domain.user.form.FindPasswordForm;
@@ -10,7 +13,6 @@ import com.joonhyuk.Subject.commerce.domain.user.form.UpdateInfoForm;
 import com.joonhyuk.Subject.commerce.domain.user.form.LoginForm;
 import com.joonhyuk.Subject.commerce.domain.user.User;
 import com.joonhyuk.Subject.commerce.service.UserService;
-import com.joonhyuk.Subject.commerce.util.JwtTokenProvider;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,21 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
-  private final JwtTokenProvider jwtTokenProvider;
-  private final RedisTemplate<String, String> redisTemplate;
   private final UserCustomRepository repository;
 
   // 유저 로그인
   @PostMapping("/login")
-  public ResponseEntity<String> login(@RequestBody LoginForm form) {
-    User user = userService.login(form);
-
-    String secretKey = "my-secret-key-123123";
-    long expiredTimeMs = 1000 * 60 * 60 * 12; // access 토큰 유효 시간 = 12시간
-
-    String token = jwtTokenProvider.createToken(user.getEmail(), secretKey, expiredTimeMs);
-    redisTemplate.opsForValue().set("ACCESS_TOKEN:" + user.getEmail(), token);
-    return ResponseEntity.ok(token);
+  public ResponseEntity<String> login(@RequestBody @Valid LoginForm form) {
+    return ResponseEntity.ok(userService.login(form));
   }
 
   // 유저 로그아웃
@@ -83,12 +76,13 @@ public class UserController {
   @PutMapping("/find/changePassword")
   public ResponseEntity<String> changePassword(@RequestHeader(name = "VERIFY-KEY") String key,
       @RequestBody ChangePwForm form) {
-    return ResponseEntity.ok(userService.changePw(form, key));
+    return ResponseEntity.ok(userService.changePassword(form, key));
   }
 
   // 유저 정보 변경
   @PutMapping("/updateInfo")
-  public ResponseEntity<UserDto> updateInfo(Authentication auth, @RequestBody @Valid UpdateInfoForm form) {
+  public ResponseEntity<UserDto> updateInfo(Authentication auth,
+      @RequestBody @Valid UpdateInfoForm form) {
 
     Long userId = repository.findIdByEmail(auth.getName());
     return ResponseEntity.ok((UserDto.from(userService.updateInfo(userId, form))));

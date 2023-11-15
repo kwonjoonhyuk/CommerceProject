@@ -28,6 +28,7 @@ public class Cart extends BaseEntity {
   private Long id;
 
   private Long customerId;
+  private Long optionId;
   private Long productId;
   private Integer productCount;
   private String productSize;
@@ -37,6 +38,7 @@ public class Cart extends BaseEntity {
     return Cart.builder()
         .customerId(customerId)
         .productId(form.getProductId())
+        .optionId(form.getOptionId())
         .productCount(form.getCount())
         .productSize(form.getSize())
         .build();
