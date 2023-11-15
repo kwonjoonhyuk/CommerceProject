@@ -1,8 +1,11 @@
 package com.joonhyuk.Subject.commerce.config;
 
 import lombok.RequiredArgsConstructor;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
+import org.redisson.config.Config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -36,5 +39,14 @@ public class RedisConfig {
     redisTemplate.setConnectionFactory(redisConnectionFactory());
     return redisTemplate;
   }
+
+  @Bean
+  public RedissonClient redissonClient() {
+    Config config = new Config();
+    config.useSingleServer()
+        .setAddress("redis://" + redisProperties.getHost() + ":" + redisProperties.getPort());
+    return Redisson.create(config);
+  }
+
 
 }

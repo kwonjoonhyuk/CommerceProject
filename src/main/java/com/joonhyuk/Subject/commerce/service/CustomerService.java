@@ -95,8 +95,8 @@ public class CustomerService {
     Cart cart = cartRepository.findByCustomerIdAndProductIdAndAndProductSize(customerId,
         form.getProductId(), form.getSize());
 
-    ProductOption option = productOptionRepository.findByProductIdAndSize(form.getProductId()
-        , form.getSize()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_OPTION));
+    ProductOption option = productOptionRepository.findById(form.getOptionId())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_OPTION));
 
     if (cart != null) {
       throw new CustomException(ErrorCode.ALREADY_EXIST_CART);

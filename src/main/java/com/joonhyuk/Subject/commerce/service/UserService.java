@@ -1,5 +1,7 @@
 package com.joonhyuk.Subject.commerce.service;
 
+import static com.joonhyuk.Subject.commerce.domain.repository.user.AuthenticationTokenRepository.expiredTimeMs;
+import static com.joonhyuk.Subject.commerce.domain.repository.user.AuthenticationTokenRepository.secretKey;
 import static com.joonhyuk.Subject.commerce.exception.ErrorCode.NAME_DO_NOT_MATCH;
 import static com.joonhyuk.Subject.commerce.exception.ErrorCode.NOT_FOUND_USER;
 import static com.joonhyuk.Subject.commerce.exception.ErrorCode.PASSWORD_DO_NOT_MATCH;
@@ -7,6 +9,7 @@ import static com.joonhyuk.Subject.commerce.exception.ErrorCode.PHONE_DO_NOT_MAT
 import static com.joonhyuk.Subject.commerce.exception.ErrorCode.PLEASE_NEW_PW;
 
 import com.joonhyuk.Subject.commerce.components.MailComponents;
+import com.joonhyuk.Subject.commerce.domain.repository.user.AuthenticationTokenRepository;
 import com.joonhyuk.Subject.commerce.domain.repository.user.UserCustomRepository;
 import com.joonhyuk.Subject.commerce.domain.repository.user.UserRepository;
 import com.joonhyuk.Subject.commerce.domain.user.form.ChangePwForm;
@@ -33,6 +36,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final UserCustomRepository customRepository;
   private final RedisTemplate<String, String> redisTemplate;
+  private final AuthenticationTokenRepository tokenRepository;
 
   // 유저 정보 조회
   public User getLoginUserByLoginId(String loginEmail) {
@@ -40,14 +44,17 @@ public class UserService {
   }
 
   // 유저 로그인
-  public User login(LoginForm form) {
+  public String login(LoginForm form) {
     if (userRepository.findByEmail(form.getEmail()).isEmpty()) {
       throw new CustomException(ErrorCode.NOT_FOUND_USER);
     }
     if (!customRepository.findPasswordByEmail(form.getEmail()).equals(form.getPassword())) {
       throw new CustomException(PASSWORD_DO_NOT_MATCH);
     }
-    return userRepository.findUserByEmail(form.getEmail());
+    String token = tokenRepository.createToken(form.getEmail(), secretKey, expiredTimeMs);
+    redisTemplate.opsForValue().set("ACCESS_TOKEN:" + form.getEmail(), token);
+    redisTemplate.expire("ACCESS_TOKEN:" + form.getEmail(), 6, TimeUnit.HOURS);
+    return token;
   }
 
   // 유저 로그아웃
@@ -108,7 +115,7 @@ public class UserService {
 
   // 비밀 번호 변경
   @Transactional
-  public String changePw(ChangePwForm form, String key) {
+  public String changePassword(ChangePwForm form, String key) {
 
     User user = userRepository.findUserByEmail(redisTemplate.opsForValue().get(key));
 
@@ -140,14 +147,10 @@ public class UserService {
 
   // 비밀번호 찾기 redis에 인증 번호 저장 후 자동 삭제 시간 설정(1시간)
   private void findPasswordRedis(Long userId, String verificationCode) {
-    Optional<User> userOptional = userRepository.findById(userId);
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
-      redisTemplate.opsForValue().set("VERIFY_PASSWORD:" + user.getEmail(), verificationCode);
-      redisTemplate.expire("VERIFY_PASSWORD:" + user.getEmail(), 1, TimeUnit.HOURS);
-      return;
-    }
-    throw new CustomException(ErrorCode.NOT_FOUND_USER);
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+    redisTemplate.opsForValue().set("VERIFY_PASSWORD:" + user.getEmail(), verificationCode);
+    redisTemplate.expire("VERIFY_PASSWORD:" + user.getEmail(), 1, TimeUnit.HOURS);
   }
 
   // 유저 정보 변경

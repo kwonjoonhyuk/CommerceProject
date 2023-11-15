@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class AddCartForm {
 
   private Long productId;
+  private Long optionId;
   @Min(value = 1, message = "최소한 한개 이상 장바구니에 담을 수 있습니다.")
   private Integer count;
 

@@ -1,4 +1,4 @@
-package com.joonhyuk.Subject.commerce.controller;
+package com.joonhyuk.Subject.commerce.controller.customer;
 
 import com.joonhyuk.Subject.commerce.domain.Customer.AddressPageResponse;
 import com.joonhyuk.Subject.commerce.domain.Customer.DeliveryAddressDto;
