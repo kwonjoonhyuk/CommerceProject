@@ -1,0 +1,57 @@
+package com.joonhyuk.Subject.commerce.controller.customer;
+
+import com.joonhyuk.Subject.commerce.aop.OrderLock;
+import com.joonhyuk.Subject.commerce.domain.order.OrderDto;
+import com.joonhyuk.Subject.commerce.domain.order.form.AddOrderDetailsForm;
+import com.joonhyuk.Subject.commerce.domain.order.form.CancelForm;
+import com.joonhyuk.Subject.commerce.domain.repository.product.ProductRepository;
+import com.joonhyuk.Subject.commerce.domain.repository.user.UserCustomRepository;
+import com.joonhyuk.Subject.commerce.exception.CustomException;
+import com.joonhyuk.Subject.commerce.exception.ErrorCode;
+import com.joonhyuk.Subject.commerce.service.OrderService;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/order")
+public class OrderController {
+
+  private final UserCustomRepository userCustomRepository;
+  private final OrderService orderService;
+  private final ProductRepository productRepository;
+
+  // 상품 결제하기(장바구니) 동시성 이슈 해결해보기
+  @PostMapping("/post")
+  @OrderLock
+  public ResponseEntity<OrderDto> OrderProduct(Authentication auth,
+      @RequestBody @Valid AddOrderDetailsForm form) {
+    Long customerId = userCustomRepository.findIdByEmail(auth.getName());
+    try {
+      Thread.sleep(3000L);
+      return ResponseEntity.ok(
+          OrderDto.from(orderService.orderProduct(customerId, form), productRepository));
+    } catch (CustomException | InterruptedException e) {
+      throw new CustomException(ErrorCode.SERVER_ERROR);
+    }
+  }
+
+  // 상품 결제 취소하기(장바구니) 취소부분은 동시성 이슈 안해도될것 같음
+  @PutMapping("/put")
+  public ResponseEntity<OrderDto> Cancel(Authentication auth,
+      @RequestBody @Valid CancelForm form) {
+    Long customerId = userCustomRepository.findIdByEmail(auth.getName());
+    return ResponseEntity.ok(
+        (OrderDto.from(orderService.cancel(customerId, form.getOrderDetailId()),
+            productRepository)));
+  }
+
+  // 상품 결제 목록 확인(주문내역) 최신순으로 불러오는게 좋은데 이거 내일 해결
+}
