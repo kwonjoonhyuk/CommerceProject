@@ -1,7 +1,6 @@
 package com.joonhyuk.Subject.commerce.domain.repository.product;
 
 import com.joonhyuk.Subject.commerce.domain.product.Product;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   Product findProductById(Long Id);
 
   Page<Product> findProductBySellerId(Long sellerId, Pageable pageable);
+
 
 }

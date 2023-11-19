@@ -1,6 +1,7 @@
 package com.joonhyuk.Subject.commerce.controller.customer;
 
 import com.joonhyuk.Subject.commerce.aop.OrderLock;
+import com.joonhyuk.Subject.commerce.domain.order.OrderDetailsPageResponse;
 import com.joonhyuk.Subject.commerce.domain.order.OrderDto;
 import com.joonhyuk.Subject.commerce.domain.order.form.AddOrderDetailsForm;
 import com.joonhyuk.Subject.commerce.domain.order.form.CancelForm;
@@ -13,10 +14,12 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,13 +37,9 @@ public class OrderController {
   public ResponseEntity<OrderDto> OrderProduct(Authentication auth,
       @RequestBody @Valid AddOrderDetailsForm form) {
     Long customerId = userCustomRepository.findIdByEmail(auth.getName());
-    try {
-      Thread.sleep(3000L);
-      return ResponseEntity.ok(
-          OrderDto.from(orderService.orderProduct(customerId, form), productRepository));
-    } catch (CustomException | InterruptedException e) {
-      throw new CustomException(ErrorCode.SERVER_ERROR);
-    }
+    return ResponseEntity.ok(
+        OrderDto.from(orderService.orderProduct(customerId, form), productRepository));
+
   }
 
   // 상품 결제 취소하기(장바구니) 취소부분은 동시성 이슈 안해도될것 같음
@@ -53,4 +52,12 @@ public class OrderController {
             productRepository)));
   }
 
+  // 주문내역확인
+  @GetMapping
+  public ResponseEntity<OrderDetailsPageResponse> getOrderDetails(Authentication auth,
+      @RequestParam(value = "pageNo", defaultValue = "1", required = false) int pageNo,
+      @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
+    Long customerId = userCustomRepository.findIdByEmail(auth.getName());
+    return ResponseEntity.ok(orderService.getOrderDetails(customerId, pageNo, pageSize));
+  }
 }

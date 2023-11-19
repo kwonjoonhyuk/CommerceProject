@@ -2,6 +2,9 @@ package com.joonhyuk.Subject.commerce.service;
 
 import com.joonhyuk.Subject.commerce.domain.cart.Cart;
 import com.joonhyuk.Subject.commerce.domain.order.OrderDetails;
+import com.joonhyuk.Subject.commerce.domain.order.OrderDetailsDto;
+import com.joonhyuk.Subject.commerce.domain.order.OrderDetailsPageResponse;
+import com.joonhyuk.Subject.commerce.domain.order.OrderDto;
 import com.joonhyuk.Subject.commerce.domain.order.OrderStatusEnum;
 import com.joonhyuk.Subject.commerce.domain.order.form.AddOrderDetailsForm;
 import com.joonhyuk.Subject.commerce.domain.product.Product;
@@ -14,7 +17,12 @@ import com.joonhyuk.Subject.commerce.domain.repository.user.UserCustomRepository
 import com.joonhyuk.Subject.commerce.domain.user.User;
 import com.joonhyuk.Subject.commerce.exception.CustomException;
 import com.joonhyuk.Subject.commerce.exception.ErrorCode;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +38,7 @@ public class OrderService {
   private final OrderDetailsRepository orderDetailsRepository;
 
 
-  //상품 결제하기(장바구니) 동시성 문제 아직 해결 못했음
+  //상품 결제하기(장바구니)
   @Transactional
   public OrderDetails orderProduct(Long customerId, AddOrderDetailsForm form) {
     // 장바구니와 고객 아이디로 물품 확인
@@ -98,6 +106,28 @@ public class OrderService {
     return orderDetails;
   }
 
+
+  // 주문 내역 확인 수정된 순(최근순)
+  public OrderDetailsPageResponse getOrderDetails(Long customerId, int pageNo, int pageSize) {
+    Pageable pageable = PageRequest.of(pageNo, pageSize);
+    Page<OrderDetails> orderDetailsPage = orderDetailsRepository.findOrderDetailsByCustomerIdOrderByModifiedAtDesc(
+        customerId, pageable);
+    if (orderDetailsPage.isEmpty()) {
+      throw new CustomException(ErrorCode.NOT_FOUND_ORDER_DETAILS);
+    }
+    List<OrderDetails> orderDetailsList = orderDetailsPage.getContent();
+
+    return OrderDetailsPageResponse.builder()
+        .orderDetailsDtoList(orderDetailsList.stream()
+            .map(orderDetails -> OrderDetailsDto.from(orderDetails, productRepository)).collect(
+                Collectors.toList()))
+        .pageNo(pageNo)
+        .pageSize(pageSize)
+        .totalElements(orderDetailsPage.getTotalElements())
+        .totalPages(orderDetailsPage.getTotalPages())
+        .last(orderDetailsPage.isLast())
+        .build();
+  }
 
 
 }

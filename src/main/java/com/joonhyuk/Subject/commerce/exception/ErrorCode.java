@@ -34,6 +34,7 @@ public enum ErrorCode {
   ALREADY_CANCEL(HttpStatus.BAD_REQUEST, "이미 취소된 거래건입니다."),
   DO_NOT_MATCH_USER_OPTION(HttpStatus.BAD_REQUEST, "해당 상품옵션을 등록한 사용자와 다릅니다. 다시 시도해주세요"),
   NOT_FOUND_PRODUCT(HttpStatus.BAD_REQUEST, "해당 상품을 찾을 수 없습니다."),
+  NOT_FOUND_REVIEW(HttpStatus.BAD_REQUEST, "해당하는 리뷰를 찾을수 없습니다."),
   ZERO_COUNT_OPTION(HttpStatus.BAD_REQUEST, "해당 사이즈의 상품은 품절되었습니다."),
   ALREADY_EXIST_SIZE(HttpStatus.BAD_REQUEST, "이미 존재하는 상품옵션 사이즈입니다."),
   PLEASE_NEW_COUNT(HttpStatus.BAD_REQUEST, "이미 해당하는 상품옵션 개수와 일치합니다."),
@@ -47,6 +48,7 @@ public enum ErrorCode {
   //장바구니 exception
   ALREADY_EXIST_CART(HttpStatus.BAD_REQUEST, "장바구니에 이미 존재하는 물품입니다. 확인해주세요"),
   NOT_FOUND_ORDER_DETAILS(HttpStatus.BAD_REQUEST, "해당 거래내역이 존재하지 않습니다."),
+  DO_NOT_WRITE_REVIEW(HttpStatus.BAD_REQUEST, "취소된 거래건에 대해서는 리뷰를 작성할 수 없습니다."),
   TOO_MANY_COUNT(HttpStatus.BAD_REQUEST, "선택하신 옵션의 개수보다 남아있는 상품의 개수가 적습니다."),
   NOT_FOUND_CART(HttpStatus.BAD_REQUEST, "해당 장바구니 물품을 찾을수 없습니다."),
 

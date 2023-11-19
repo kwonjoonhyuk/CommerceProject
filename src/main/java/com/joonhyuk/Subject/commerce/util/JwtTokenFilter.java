@@ -43,17 +43,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     // Header의 Authorization 값이 비어있으면 => Jwt Token을 전송하지 않음 => 로그인 하지 않음
     if (authorizationHeader == null) {
 
-      if (request.getRequestURI().equals("/login")) {
+      if (request.getRequestURI().equals("/login") || request.getRequestURI().startsWith("/signup")
+          || request.getRequestURI().startsWith("/find") || request.getRequestURI().startsWith("/search")) {
         filterChain.doFilter(request, response);
       }
-
-      if (request.getRequestURI().startsWith("/signup")){
-        filterChain.doFilter(request, response);
-      }
-      if (request.getRequestURI().startsWith("/find")){
-        filterChain.doFilter(request, response);
-      }
-
       jwtExceptionHandler(response, new CustomException(ErrorCode.NOT_LOGIN_TOKEN));
       return;
     }
@@ -76,7 +69,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     String loginEmail = provider.getLoginEmail(token, secretKey);
 
     // 전송받은 jwt 토큰이 redis에 저장되어 있지않다면 로그아웃된것 => 로그인 재 요청
-    if (redisTemplate.opsForValue().get("ACCESS_TOKEN:"+loginEmail).equals("logout")) {
+    if (redisTemplate.opsForValue().get("ACCESS_TOKEN:" + loginEmail).equals("logout")) {
       jwtExceptionHandler(response, new CustomException(ErrorCode.ALREADY_LOGOUT_USER));
       return;
     }
